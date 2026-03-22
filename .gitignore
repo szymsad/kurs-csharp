@@ -1,0 +1,11 @@
+#visual studio
+.vs/
+*.user
+
+# build 
+bin/
+obj/
+
+
+Thumbs.db
+.DS_Store
