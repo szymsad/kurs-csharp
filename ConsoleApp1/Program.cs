@@ -41,7 +41,10 @@ var sortedCat = produkty2
     });
 
 foreach(var p in sortedCat) 
-    Console.WriteLine($"{p.Nazwa}: {p.Suma} zl");
+    Console.WriteLine($"{p.Nazwa}: {p.Suma:C} zl");
+
+// Największa kategoria
+Console.WriteLine(sortedCat.MaxBy(p => p.Suma));
 
 // Definicja klasy - ZAWSZE na dole w tym stylu pisania
 class Produkt
