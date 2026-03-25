@@ -1,4 +1,6 @@
 ﻿// Program
+using System.Runtime.CompilerServices;
+
 var produkty = new List<Produkt>
 {
     new Produkt("Laptop", 3500m, 5),
@@ -45,6 +47,22 @@ foreach(var p in sortedCat)
 
 // Największa kategoria
 Console.WriteLine(sortedCat.MaxBy(p => p.Suma));
+
+
+
+var produkty3= new List<Produkt> { };
+var plik = File.ReadAllLines("produkty.txt");
+foreach (var line in plik)
+{
+    var produkt = line.Split(',');
+    produkty3.Add(new Produkt(produkt[0], decimal.Parse(produkt[1]), int.Parse(produkt[2])));
+}
+foreach (var  produkt in produkty3)
+{
+    Console.WriteLine(produkt);
+}
+
+
 
 // Definicja klasy - ZAWSZE na dole w tym stylu pisania
 class Produkt
