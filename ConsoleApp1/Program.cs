@@ -1,5 +1,8 @@
 ﻿// Program
+using System.Globalization;
 using System.Runtime.CompilerServices;
+using CsvHelper;
+using CsvHelper.Configuration;
 
 var produkty = new List<Produkt>
 {
@@ -64,6 +67,20 @@ foreach (var  produkt in produkty3)
 
 
 
+using (var reader = new StreamReader("sprzedaz.csv"))
+using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+{
+    var records = csv.GetRecords<Sprzedaz>();
+
+    foreach (var record in records)
+    {
+        Console.WriteLine(record.Produkt);
+        Console.WriteLine(record.Cena);
+        Console.WriteLine(record.Ilosc);
+    }
+}
+
+
 // Definicja klasy - ZAWSZE na dole w tym stylu pisania
 class Produkt
 {
@@ -113,4 +130,13 @@ class Produkt2
     {
         return $"{Nazwa} | {Cena:C} | szt: {Ilosc} | kat: {Kategoria}";
     }
+}
+
+class Sprzedaz
+{
+    public string Produkt { get; set; }
+    public string Kategoria { get; set; }
+    public decimal Cena { get; set; }
+    public int Ilosc { get; set; }
+    public DateTime Data { get; set; }
 }
