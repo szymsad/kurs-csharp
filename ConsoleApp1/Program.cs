@@ -65,19 +65,56 @@ foreach (var  produkt in produkty3)
     Console.WriteLine(produkt);
 }
 
-
+Console.WriteLine("\n--- Rozdzial 2 ---\n");
 
 using (var reader = new StreamReader("sprzedaz.csv"))
 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
 {
-    var records = csv.GetRecords<Sprzedaz>();
+    var records = csv.GetRecords<Sprzedaz>().ToList();
 
-    foreach (var record in records)
+    //zad 1 wszystjkie ceny
+
+    var allPrice = records
+        .GroupBy(p => p.Kategoria)
+        .Select(grupa => new
+        {
+            Nazwa = grupa.Key,
+            Suma = grupa.Sum(p => p.WartoscCalkowita())
+        });
+
+    foreach (var record in allPrice)
+        Console.WriteLine($"{record.Nazwa}: {record.Suma} zl ");
+
+    //zad 2 top 3 sprzedaży
+
+    var allSales = records
+        .OrderByDescending(p => p.WartoscCalkowita())
+        .Take(3)
+        .ToList();
+    Console.WriteLine("Najelpiej sprzedające sie produkty");
+    int counter = 1;
+    foreach(var record in allSales)
     {
-        Console.WriteLine(record.Produkt);
-        Console.WriteLine(record.Cena);
-        Console.WriteLine(record.Ilosc);
+        Console.WriteLine($"{counter}. {record.Produkt} - {record.WartoscCalkowita()}"); 
+        counter++;
     }
+    //zad 3 top miesiac 
+
+    var monthlySales = records
+        .GroupBy(p => p.Data.Month)
+        .Select(u => new
+        {
+            Nazwa = u.Key,
+            Suma = u.Sum(p => p.WartoscCalkowita())
+        })
+        //.OrderByDescending(p =>p.Suma)
+        .ToList();
+    foreach (var record in monthlySales)
+    {
+        Console.WriteLine($"{record.Nazwa}: {record.Suma}");
+    }
+
+
 }
 
 
@@ -139,4 +176,9 @@ class Sprzedaz
     public decimal Cena { get; set; }
     public int Ilosc { get; set; }
     public DateTime Data { get; set; }
+
+    public decimal WartoscCalkowita()
+    {
+        return Cena * Ilosc;
+    }
 }
