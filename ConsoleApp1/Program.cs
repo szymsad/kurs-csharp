@@ -137,46 +137,49 @@ var plik_brudny = File.ReadAllLines("sprzedaz_brudna.csv");
 int line_counter = 1;
 foreach (var line in plik_brudny)
 {
-   
-    var produkt = line.Split(',');
-    int counter = 0;
-    string filler = "";
-    foreach (var x in produkt)
+    if (line_counter == 1) ;
+    else
     {
-        //0,1,2,3,4
-        if (counter == 0) filler = "nazwy produktu";
-        else if (counter == 1) filler = "kategorii";
-        else if (counter == 2) filler = "ceny";
-        else if (counter == 3) filler = "ilosci";
-        else filler = "daty";
+        var produkt = line.Split(',');
+        int counter = 0;
+        string filler = "";
+        foreach (var x in produkt)
+        {
+            //0,1,2,3,4
+            if (counter == 0) filler = "nazwy produktu";
+            else if (counter == 1) filler = "kategorii";
+            else if (counter == 2) filler = "ceny";
+            else if (counter == 3) filler = "ilosci";
+            else filler = "daty";
 
 
-        if (x == string.Empty)
-        {
-            Console.WriteLine($"Błąd w lini {line_counter}: brak " + filler);
-        }
-        else
-        {
-            switch (counter)
+            if (x == string.Empty)
             {
-                case 2:
-                    if (int.TryParse(x, out int parse));
-                    else Console.WriteLine($"Błąd w lini {line_counter}: niepoprawna cena - {x}");
-                    break;
-                case 3:
-                    if (decimal.TryParse(x, out decimal parse1)) ;
-                    else Console.WriteLine($"Błąd w lini {line_counter}: niepoprawna ilosc - {x}");
-                    break;
-                case 4:
-
-                    if (DateTime.TryParse(x, out DateTime parse2)) ;
-                    else Console.WriteLine($"Błąd w lini {line_counter}: niepoprawna data - {x}");
-                    break;
+                Console.WriteLine($"Błąd w lini {line_counter}: brak " + filler);
             }
+            else
+            {
+                switch (counter)
+                {
+                    case 2:
+                        if (int.TryParse(x, out int parse)) ;
+                        else Console.WriteLine($"Błąd w lini {line_counter}: niepoprawna cena - {x}");
+                        break;
+                    case 3:
+                        if (decimal.TryParse(x, out decimal parse1)) ;
+                        else Console.WriteLine($"Błąd w lini {line_counter}: niepoprawna ilosc - {x}");
+                        break;
+                    case 4:
+
+                        if (DateTime.TryParse(x, out DateTime parse2)) ;
+                        else Console.WriteLine($"Błąd w lini {line_counter}: niepoprawna data - {x}");
+                        break;
+                }
+
+            }
+            counter++;
 
         }
-        counter++;
-
     }
     line_counter++;
 }
