@@ -64,7 +64,7 @@
             // 
             // panel2
             // 
-            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panel2.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             panel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             panel2.Location = new Point(370, 0);
             panel2.Name = "panel2";
