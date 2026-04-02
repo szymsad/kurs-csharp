@@ -36,13 +36,14 @@
             dataGridView2 = new DataGridView();
             label1 = new Label();
             label2 = new Label();
+            export = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             SuspendLayout();
             // 
             // load_csv
             // 
             load_csv.Anchor = AnchorStyles.Bottom;
-            load_csv.Location = new Point(332, 335);
+            load_csv.Location = new Point(265, 335);
             load_csv.Name = "load_csv";
             load_csv.Size = new Size(99, 23);
             load_csv.TabIndex = 0;
@@ -63,15 +64,16 @@
             // 
             // panel2
             // 
-            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             panel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             panel2.Location = new Point(370, 0);
             panel2.Name = "panel2";
-            panel2.Size = new Size(422, 329);
+            panel2.Size = new Size(410, 329);
             panel2.TabIndex = 3;
             // 
             // dateTo
             // 
+            dateTo.Anchor = AnchorStyles.Bottom;
             dateTo.Format = DateTimePickerFormat.Short;
             dateTo.Location = new Point(655, 335);
             dateTo.MaxDate = new DateTime(2030, 12, 31, 0, 0, 0, 0);
@@ -83,6 +85,7 @@
             // 
             // dateFrom
             // 
+            dateFrom.Anchor = AnchorStyles.Bottom;
             dateFrom.Format = DateTimePickerFormat.Short;
             dateFrom.Location = new Point(517, 335);
             dateFrom.MaxDate = new DateTime(2030, 12, 31, 0, 0, 0, 0);
@@ -105,6 +108,7 @@
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Bottom;
             label1.AutoSize = true;
             label1.Location = new Point(485, 339);
             label1.Name = "label1";
@@ -114,18 +118,32 @@
             // 
             // label2
             // 
+            label2.Anchor = AnchorStyles.Bottom;
             label2.AutoSize = true;
             label2.Location = new Point(623, 339);
             label2.Name = "label2";
             label2.Size = new Size(25, 15);
             label2.TabIndex = 6;
             label2.Text = "Do:";
+            label2.Click += label2_Click;
+            // 
+            // export
+            // 
+            export.Anchor = AnchorStyles.Bottom;
+            export.Location = new Point(370, 335);
+            export.Name = "export";
+            export.Size = new Size(109, 23);
+            export.TabIndex = 7;
+            export.Text = "Eksport wykresu";
+            export.UseVisualStyleBackColor = true;
+            export.Click += export_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(792, 370);
+            Controls.Add(export);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(dateTo);
@@ -151,5 +169,6 @@
         private DateTimePicker dateFrom;
         private Label label1;
         private Label label2;
+        private Button export;
     }
 }

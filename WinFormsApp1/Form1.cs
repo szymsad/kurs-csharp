@@ -76,7 +76,7 @@ namespace WinFormsApp1
             }
         }
 
-      
+
         private void chartType_Click(object sender, EventArgs e)
         {
             categoreis = !categoreis;
@@ -151,6 +151,28 @@ namespace WinFormsApp1
             Labels = nazwy.ToArray()
         }
             };
+        }
+
+        private void export_Click(object sender, EventArgs e)
+        {
+            var dialog = new SaveFileDialog
+            {
+                Filter = "PNG files (*.png)|*.png",
+                FileName = "wykres.png"
+            };
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                var bitmap = new Bitmap(panel2.Width, panel2.Height);
+                panel2.DrawToBitmap(bitmap, new Rectangle(0, 0, panel2.Width, panel2.Height));
+                bitmap.Save(dialog.FileName);
+                MessageBox.Show("Wykres zapisany!");
+            }
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 
