@@ -12,6 +12,8 @@ namespace WinFormsApp1
         private DataGridView dataGridView1;
         private Panel panel1;
 
+        bool categoreis = true;
+
         private List<Sprzedaz> _records;
         public Form1()
         {
@@ -74,65 +76,82 @@ namespace WinFormsApp1
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+      
+        private void chartType_Click(object sender, EventArgs e)
         {
-            var grupy = _records
-                    .GroupBy(p => p.Produkt)
-                    .Select(g => new
-                    {
-                        Nazwa = g.Key,
-                        Suma = (double)g.Sum(p => p.WartoscCalkowita())
-                    })
+            categoreis = !categoreis;
+            if (categoreis)
+            {
+                var grupy = _records
+                    .GroupBy(p => p.Kategoria)
+                    .Select(g => new { Nazwa = g.Key, Suma = (double)g.Sum(p => p.WartoscCalkowita()) })
                     .ToList();
 
-            chart.Series = new ISeries[]
+                OdswiezWykres(grupy.Select(g => g.Nazwa).ToList(), grupy.Select(g => g.Suma).ToList());
+                chartType.Text = "Produkty";
+            }
+            else
             {
-                    new ColumnSeries<double>
-                    {
-                        Name = "Wartość sprzedaży",
-                        Values = grupy.Select(g => g.Suma).ToArray()
-                    }
-            };
+                var grupy = _records
+                    .GroupBy(p => p.Produkt)
+                    .Select(g => new { Nazwa = g.Key, Suma = (double)g.Sum(p => p.WartoscCalkowita()) })
+                    .ToList();
 
-            chart.XAxes = new Axis[]
-            {
-                    new Axis
-                    {
-                        Labels = grupy.Select(g => g.Nazwa).ToArray()
-                    }
-            };
+                OdswiezWykres(grupy.Select(g => g.Nazwa).ToList(), grupy.Select(g => g.Suma).ToList());
+                chartType.Text = "Kategorie";
+            }
         }
 
-        private void button1_Click_1(object sender, EventArgs e)
+        private void dateChanged()
         {
+            if (categoreis)
+            {
+                var grupy = _records
+                    .Where(p => p.Data > dateFrom.Value && p.Data < dateTo.Value)
+                    .GroupBy(p => p.Kategoria)
+                    .Select(g => new { Nazwa = g.Key, Suma = (double)g.Sum(p => p.WartoscCalkowita()) })
+                    .ToList();
 
-            var grupy = _records
-                .GroupBy(p => p.Kategoria)
-                .Select(g => new
-                {
-                    Nazwa = g.Key,
-                    Suma = (double)g.Sum(p => p.WartoscCalkowita())
-                })
-                .ToList();
+                OdswiezWykres(grupy.Select(g => g.Nazwa).ToList(), grupy.Select(g => g.Suma).ToList());
+            }
+            else
+            {
+                var grupy = _records
+                    .Where(p => p.Data > dateFrom.Value && p.Data < dateTo.Value)
+                    .GroupBy(p => p.Produkt)
+                    .Select(g => new { Nazwa = g.Key, Suma = (double)g.Sum(p => p.WartoscCalkowita()) })
+                    .ToList();
 
+                OdswiezWykres(grupy.Select(g => g.Nazwa).ToList(), grupy.Select(g => g.Suma).ToList());
+            }
+        }
+        private void dateFrom_ValueChanged(object sender, EventArgs e)
+        {
+            dateChanged();
+        }
+
+        private void dateTo_ValueChanged(object sender, EventArgs e)
+        {
+            dateChanged();
+        }
+        private void OdswiezWykres(List<string> nazwy, List<double> wartosci)
+        {
             chart.Series = new ISeries[]
             {
-                    new ColumnSeries<double>
-                    {
-                        Name = "Wartość sprzedaży",
-                        Values = grupy.Select(g => g.Suma).ToArray()
-                    }
+        new ColumnSeries<double>
+        {
+            Name = "Wartość sprzedaży",
+            Values = wartosci.ToArray()
+        }
             };
-
             chart.XAxes = new Axis[]
             {
-                    new Axis
-                    {
-                        Labels = grupy.Select(g => g.Nazwa).ToArray()
-                    }
+        new Axis
+        {
+            Labels = nazwy.ToArray()
+        }
             };
         }
-        
     }
 
     class Sprzedaz
