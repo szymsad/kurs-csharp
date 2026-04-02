@@ -18,26 +18,17 @@ namespace WinFormsApp1
             InitializeComponent();
 
             // Najpierw panel (Fill wypełnia całą resztę)
-            panel1 = new Panel
-            {
-                Dock = DockStyle.Fill
-            };
-            Controls.Add(panel1);
 
-            // Potem DataGridView (Left "odgryza" kawałek od lewej)
-            dataGridView1 = new DataGridView
-            {
-                Dock = DockStyle.Left,
-                Width = 400
-            };
-            Controls.Add(dataGridView1);
+            Controls.Add(panel2);
+
+            Controls.Add(dataGridView2);
 
             // Wykres do panelu
             chart = new CartesianChart
             {
                 Dock = DockStyle.Fill
             };
-            panel1.Controls.Add(chart);
+            panel2.Controls.Add(chart);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -53,7 +44,7 @@ namespace WinFormsApp1
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
                 _records = csv.GetRecords<Sprzedaz>().ToList();
 
-                dataGridView1.DataSource = _records;
+                dataGridView2.DataSource = _records;
 
                 var grupy = _records
                     .GroupBy(p => p.Kategoria)
@@ -141,6 +132,7 @@ namespace WinFormsApp1
                     }
             };
         }
+        
     }
 
     class Sprzedaz
