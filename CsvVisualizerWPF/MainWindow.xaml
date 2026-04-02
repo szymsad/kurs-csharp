@@ -16,11 +16,18 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Button Grid.Row="0" Grid.Column="0" Content="Wczytaj CSV" Margin="5"/>
+        <Button Grid.Row="0" Grid.Column="0" 
+        Content="Wczytaj CSV" 
+        Command="{Binding WczytajCommand}"
+        Margin="5"/>
         <TextBlock Grid.Row="0" Grid.Column="1" 
            Text="{Binding Status}" 
            VerticalAlignment="Center" Margin="10"/>
-        <DataGrid Grid.Row="1" Grid.Column="0" Margin="5"/>
+        <DataGrid Grid.Row="1" Grid.Column="0" 
+          ItemsSource="{Binding Rekordy}"
+          AutoGenerateColumns="True"
+          IsReadOnly="True"
+          Margin="5"/>
         <Border Grid.Row="1" Grid.Column="1" Background="LightGray" Margin="5"/>
     </Grid>
 </Window>

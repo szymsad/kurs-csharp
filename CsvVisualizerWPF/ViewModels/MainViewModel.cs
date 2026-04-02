@@ -1,6 +1,10 @@
-﻿using CsvVisualizerWPF.Models;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
+using System.IO;
+using System.Windows.Input;
+using CsvHelper;
+using CsvVisualizerWPF.Models;
 
 namespace CsvVisualizerWPF.ViewModels
 {
@@ -27,6 +31,30 @@ namespace CsvVisualizerWPF.ViewModels
             {
                 _status = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Status)));
+            }
+        }
+        public ICommand WczytajCommand { get; }
+
+        public MainViewModel()
+        {
+            WczytajCommand = new RelayCommand(WczytajCSV);
+        }
+
+        private void WczytajCSV()
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Filter = "CSV files (*.csv)|*.csv"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                using var reader = new StreamReader(dialog.FileName);
+                using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+                var dane = csv.GetRecords<Sprzedaz>().ToList();
+
+                Rekordy = new ObservableCollection<Sprzedaz>(dane);
+                Status = $"Wczytano {Rekordy.Count} rekordów";
             }
         }
     }
