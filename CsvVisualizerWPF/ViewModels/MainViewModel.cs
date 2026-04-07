@@ -52,9 +52,18 @@ namespace CsvVisualizerWPF.ViewModels
                 using var reader = new StreamReader(dialog.FileName);
                 using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
                 var dane = csv.GetRecords<Sprzedaz>().ToList();
-
+                decimal suma = dane.Sum(p => p.WartoscCalkowita());
+                var grupy = dane
+                   .GroupBy(p => p.Kategoria)
+                   .Select(g => new
+                   {
+                       Nazwa = g.Key,
+                       Suma = (double)g.Sum(p => p.WartoscCalkowita())
+                   })
+                   .OrderByDescending(p=>p.Suma)
+                   .ToList();
                 Rekordy = new ObservableCollection<Sprzedaz>(dane);
-                Status = $"Wczytano {Rekordy.Count} rekordów";
+                Status = $"Łączna wartość: {suma} zł | Najlepsza kategoria: {grupy[0].Nazwa}";
             }
         }
     }
