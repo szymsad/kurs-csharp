@@ -6,6 +6,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -20,12 +21,25 @@
         <TextBlock Grid.Row="0" Grid.Column="1" 
            Text="{Binding Status}" 
            VerticalAlignment="Center" Margin="10"/>
-        <DataGrid Grid.Row="1" Grid.Column="0" 
+        
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" 
+            Orientation="Horizontal" 
+            Margin="5">
+            <TextBlock Text="Od:" VerticalAlignment="Center" Margin="5 0"/>
+            <DatePicker SelectedDate="{Binding DataOd}" Width="120"/>
+            <TextBlock Text="Do:" VerticalAlignment="Center" Margin="10 0 5 0"/>
+            <DatePicker SelectedDate="{Binding DataDo}" Width="120"/>
+            <Button Content="Kategorie / Produkty" 
+            Command="{Binding PrzelaczCommand}"
+            Margin="20 0 0 0" Padding="10 0"/>
+        </StackPanel>
+
+        <DataGrid Grid.Row="2" Grid.Column="0" 
           ItemsSource="{Binding Rekordy}"
           AutoGenerateColumns="True"
           IsReadOnly="True"
           Margin="5"/>
-        <lvc:CartesianChart Grid.Row="1" Grid.Column="1"
+        <lvc:CartesianChart Grid.Row="2" Grid.Column="1"
                     Series="{Binding Series}"
                     XAxes="{Binding XAxes}"
                     Margin="5"/>
