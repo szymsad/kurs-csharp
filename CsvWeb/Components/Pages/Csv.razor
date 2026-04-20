@@ -1,4 +1,91 @@
 ﻿@page "/csv"
+@rendermode InteractiveServer
+@using CsvHelper
+@using System.Globalization
 
 <h1>Analiza CSV</h1>
-<p>Strona w budowie</p>
+
+<InputFile OnChange="WczytajPlik" accept=".csv" />
+<button @onclick="Test">Test</button>
+<p>@blad</p>
+
+@if (rekordy.Any())
+{
+    <p>Wczytano @rekordy.Count rekordów</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produkt</th>
+                <th>Kategoria</th>
+                <th>Cena</th>
+                <th>Ilość</th>
+                <th>Wartość</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in rekordy)
+            {
+                <tr>
+                    <td>@r.Produkt</td>
+                    <td>@r.Kategoria</td>
+                    <td>@r.Cena</td>
+                    <td>@r.Ilosc</td>
+                    <td>@r.WartoscCalkowita()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+        @foreach (var stat in statystyki)
+        {
+            <p>@stat.Nazwa: @stat.Suma </p>
+        }
+}
+
+@code {
+    private void Test()
+    {
+        blad = "przycisk działa!";
+    }
+    private List<Sprzedaz> rekordy = new();
+    private List<(string Nazwa, decimal Suma)> statystyki; 
+    private string blad = "";
+
+    private async Task WczytajPlik(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var plik = e.File;
+            using var stream = plik.OpenReadStream();
+
+            // Skopiuj do MemoryStream - CsvHelper wymaga synchronicznego odczytu
+            var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
+
+            using var reader = new StreamReader(memoryStream);
+            using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+            rekordy = csv.GetRecords<Sprzedaz>().ToList();
+            blad = $"OK - wczytano {rekordy.Count}";
+            statystyki = rekordy
+                .GroupBy(p => p.Kategoria)
+                .Select(g => (g.Key, g.Sum(p => p.WartoscCalkowita())))
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            blad = ex.Message;
+        }
+        StateHasChanged();
+    }
+
+    class Sprzedaz
+    {
+        public string Produkt { get; set; }
+        public string Kategoria { get; set; }
+        public decimal Cena { get; set; }
+        public int Ilosc { get; set; }
+        public DateTime Data { get; set; }
+        public decimal WartoscCalkowita() => Cena * Ilosc;
+    }
+}
