@@ -2,6 +2,9 @@
 @rendermode InteractiveServer
 @using CsvHelper
 @using System.Globalization
+@using LiveChartsCore
+@using LiveChartsCore.SkiaSharpView
+@using LiveChartsCore.SkiaSharpView.Blazor
 
 <h1>Analiza CSV</h1>
 
@@ -35,11 +38,15 @@
             }
         </tbody>
     </table>
-
-        @foreach (var stat in statystyki)
-        {
+    @foreach (var stat in statystyki){
             <p>@stat.Nazwa: @stat.Suma </p>
-        }
+    }
+    <CartesianChart Series="series"
+                    XAxes="xAxes"
+                    Style="height: 400px;">
+    </CartesianChart>
+
+
 }
 
 @code {
@@ -48,9 +55,14 @@
         blad = "przycisk działa!";
     }
     private List<Sprzedaz> rekordy = new();
-    private List<(string Nazwa, decimal Suma)> statystyki; 
+    //do linqu potem
+    private List<(string Nazwa, decimal Suma)> statystyki= new(); 
     private string blad = "";
-
+    private ISeries[] series = Array.Empty<ISeries>();
+    private Axis[] xAxes = new Axis[]
+    {
+    new Axis { Labels = Array.Empty<string>() }
+    };
     private async Task WczytajPlik(InputFileChangeEventArgs e)
     {
         try
@@ -71,6 +83,32 @@
                 .GroupBy(p => p.Kategoria)
                 .Select(g => (g.Key, g.Sum(p => p.WartoscCalkowita())))
                 .ToList();
+
+                    var grupy = rekordy
+            .GroupBy(p => p.Kategoria)
+            .Select(g => new
+            {
+            Nazwa = g.Key,
+            Suma = (double)g.Sum(p => p.WartoscCalkowita())
+            })
+            .ToList();
+
+            series = new ISeries[]
+            {
+                new ColumnSeries<double>
+                {
+                    Name = "Wartość sprzedaży",
+                    Values = grupy.Select(g => g.Suma).ToArray()
+                }
+            };
+
+            xAxes = new Axis[]
+            {
+                new Axis
+                {
+                    Labels = grupy.Select(g => g.Nazwa).ToArray()
+                }
+            };
         }
         catch (Exception ex)
         {
