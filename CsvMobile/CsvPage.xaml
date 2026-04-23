@@ -22,6 +22,22 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+        
+        <CollectionView x:Name="listaStatystyk">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label>
+                        <Label.FormattedText>
+                            <FormattedString>
+                                <Span Text="{Binding Nazwa}"/>
+                                <Span Text=": "/>
+                                <Span Text="{Binding Suma}"/>
+                            </FormattedString>
+                        </Label.FormattedText>
+                    </Label>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
     </VerticalStackLayout>
 </ContentPage>
